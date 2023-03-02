@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
         game2.play(card2)
     }
 
-    println("\n\n>>> Credits & Tickets will be transferred from Card #1 to Car #2...")
+    println("\n\n>>> Credits & Tickets will be transferred from Card #1 to Card #2...")
     terminal1.transferCredits(card1, card2)
     terminal1.transferTickets(card1, card2)
 

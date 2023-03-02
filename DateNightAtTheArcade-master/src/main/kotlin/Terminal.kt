@@ -1,12 +1,15 @@
 class Terminal {
-    private val prizes = mutableListOf<PrizeCategory>(
-        PrizeCategory("Candy", 10, 10),
-        PrizeCategory("Hat", 20, 5),
-        PrizeCategory("Glasses", 30, 3)
-    )
+
+    private val creditsToDollarsRatio = 2 // 2 credits per $1
+
+    // Prize categories
+    private val candy = PrizeCategory("Candy", 10, 5)
+    private val hat = PrizeCategory("Hat", 20, 3)
+    private val glasses = PrizeCategory("Glasses", 30, 2)
 
     fun addCredits(card: Card, amount: Int) {
-        card.addCredits(amount)
+        card.credits += amount
+        println("$amount credits added to Card #${card.id}. Total credits: ${card.credits}")
     }
 
     fun transferCredits(cardFrom: Card, cardTo: Card) {
@@ -23,16 +26,50 @@ class Terminal {
         println("$tickets tickets transferred from Card #${cardFrom.id} to Card #${cardTo.id}")
     }
 
-    fun requestPrize(prizeName: String, card: Card) {
-        val prize = prizes.find { it.name == prizeName }
-        if (prize == null) {
-            println("Unknown prize: $prizeName")
-            return
+    fun requestPrize(prize: String, card: Card) {
+        when (prize) {
+            candy.name -> {
+                if (candy.count > 0) {
+                    if (card.tickets >= candy.ticketsRequired) {
+                        candy.claim(card)
+                    } else {
+                        println("Not enough tickets on Card #${card.id} to claim prize (${candy.name}). Need ${candy.ticketsRequired} tickets, but only has ${card.tickets}")
+                    }
+                } else {
+                    println("No more ${candy.name} left in the terminal.")
+                }
+            }
+            hat.name -> {
+                if (hat.count > 0) {
+                    if (card.tickets >= hat.ticketsRequired) {
+                        hat.claim(card)
+                    } else {
+                        println("Not enough tickets on Card #${card.id} to claim prize (${hat.name}). Need ${hat.ticketsRequired} tickets, but only has ${card.tickets}")
+                    }
+                } else {
+                    println("No more ${hat.name} left in the terminal.")
+                }
+            }
+            glasses.name -> {
+                if (glasses.count > 0) {
+                    if (card.tickets >= glasses.ticketsRequired) {
+                        glasses.claim(card)
+                    } else {
+                        println("Not enough tickets on Card #${card.id} to claim prize (${glasses.name}). Need ${glasses.ticketsRequired} tickets, but only has ${card.tickets}")
+                    }
+                } else {
+                    println("No more ${glasses.name} left in the terminal.")
+                }
+            }
+            else -> {
+                println("Invalid prize name: $prize")
+            }
         }
+    }
 
-        if (prize.count == 0) {
-            println("Sorry, the $prizeName is out of stock.")
-        }
-    }}
+    fun calculateDollarAmount(card: Card): Double {
+        return card.credits.toDouble() / creditsToDollarsRatio
+    }
+}
 
 
